@@ -252,7 +252,7 @@ with abas[2]:
     )
     col15.plotly_chart(fig_problemas_reportados, use_container_width=True)
 
-with abas[3]:
+'''with abas[3]:
     col16 = st.columns(1)[0]
     col17 = st.columns(1)[0]
     #educacional  e recrecional por dispositivo
@@ -282,4 +282,4 @@ with abas[3]:
 #educacional e recreacional por genero
 
 ###
-#tempo de tela médio educacional e recreacional por impactos na saúde barras e urbano ou rural
+#tempo de tela médio educacional e recreacional por impactos na saúde barras e urbano ou rural'''
