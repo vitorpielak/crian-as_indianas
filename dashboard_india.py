@@ -74,10 +74,10 @@ st.title('Dashboard de Tempo de Tela de Crianças na Índia')
 st.markdown(''' A OMS indica que crianças de 2 a 4 anos devem ter no máximo 1 hora de tela por dia, enquanto crianças de 5 a 17 anos devem ter no máximo 2 horas. Este dashboard analisa o tempo de tela de crianças na Índia e os impactos na saúde associados. :sunny: :computer: :baby: ''')
 
 
-abas = st.tabs(['Visão Geral', 'Outra Análise'])
+abas = st.tabs(['Visão Geral', 'Outra Análise','Impactos na Saúde','Recreacional e Educacional'])
 #streamlit
 with abas[0]:
-    
+    st.markdown('''## Visão Geral do Tempo de Tela de Crianças na Índia''')
     st.sidebar.header('Filtros')
 
 
@@ -152,7 +152,8 @@ with abas[0]:
         x='Urbano ou Rural',
         color='Gênero',
         barmode='group',
-        title='Gênero por Localidade'
+        title='Gênero por Localidade',
+        labels={'Urbano ou Rural': 'Localidade', 'Gênero': 'Gênero', 'count': 'Contagem'}
     )
     col8.plotly_chart(fig_genero_localidade, use_container_width=True)  
 
@@ -160,5 +161,125 @@ with abas[0]:
     # tabela de dados filtrados
     st.dataframe(df_fil)
 
+with abas[1]:
+
+    
+    col10 = st.columns(1)[0]
+    col11,col12 = st.columns(2)
+
+    #idade x tempo médio x genero dispersão
+    fig_dispersao = px.scatter(
+        df_fil,
+        x='Media_tela_hora',
+        y='Idade',
+        color='Gênero',
+        size='Media_tela_hora',
+        hover_data=['Gênero', 'Media_tela_hora'],
+        title='Idade x Tempo Médio x Gênero',
+        labels={'Media_tela_hora': 'Tempo Médio de Tela (horas)', 'Idade': 'Idade', 'Gênero': 'Gênero'},
+        color_discrete_map={
+            'Masculino': '#339CFF',   # Azul
+            'Feminino': '#FF69B4'     # Rosa
+        }
+)
+    
+    col10.plotly_chart(fig_dispersao, use_container_width=True)
+
+    #tempo médio por dipositivo x genero matriz
+    fig_matriz = px.imshow(
+        df_fil.pivot_table(index='Dispositivo', columns='Gênero', values='Media_tela_hora', aggfunc='mean'),
+        title='Tempo Médio por Dispositivo x Gênero',
+        labels={'x': 'Gênero', 'y': 'Dispositivo', 'color': 'Tempo Médio de Tela (horas)'},
+        color_continuous_scale='Viridis'
+    )
+    col11.plotly_chart(fig_matriz, use_container_width=True)
+
+    #tempo médio de uso x genero x faixa etaria barras
+    fig_barras = px.bar(
+        df_fil,
+        x='Faixa_Etária',
+        y='Media_tela_hora',
+        color='Gênero',
+        barmode='group',
+        title='Tempo Médio de Uso x Gênero x Faixa Etária',
+        labels={'Faixa_Etária': 'Faixa Etária', 'Media_tela_hora': 'Tempo Médio de Tela (horas)', 'Gênero': 'Gênero'}
+    )
+    col12.plotly_chart(fig_barras, use_container_width=True)
+
+with abas[2]:
+    col13 = st.columns(1)[0]
+    col14,col15 = st.columns(2)
+
+    #impactos na saude por dispositivo barras horizontais
+    impactos_dispositivo = df_fil.groupby('Dispositivo')['Impactos_na_Saúde'].value_counts().unstack().fillna(0)
+    impactos_dispositivo = impactos_dispositivo.div(impactos_dispositivo.sum(axis=1),
+                                                        axis=0) * 100
+    impactos_dispositivo = impactos_dispositivo.reset_index().melt(id_vars='Dispositivo', var_name='Impactos_na_Saúde', value_name='Percentual')
+    fig_impactos_dispositivo = px.bar(
+        impactos_dispositivo,
+        x='Percentual',
+        y='Dispositivo',
+        color='Impactos_na_Saúde',
+        orientation='h',
+        title='Impactos na Saúde por Dispositivo',
+        labels={'Percentual': 'Percentual (%)', 'Dispositivo': 'Dispositivo', 'Impactos_na_Saúde': 'Impactos na Saúde'}
+    )
+    col13.plotly_chart(fig_impactos_dispositivo, use_container_width=True)
+
+    #impactos na saúde por ocorrencia treemap
+    impactos_ocorrencia = df_fil['Impactos_na_Saúde'].value_counts().reset_index()
+    impactos_ocorrencia.columns = ['Impactos_na_Saúde', 'Contagem']
+    fig_impactos_ocorrencia = px.treemap(
+        impactos_ocorrencia,
+        path=['Impactos_na_Saúde'],
+        values='Contagem',
+        title='Impactos na Saúde por Ocorrência',
+        labels={'Impactos_na_Saúde': 'Impactos na Saúde', 'Contagem': 'Contagem'}
+    )
+    col14.plotly_chart(fig_impactos_ocorrencia, use_container_width=True)
+
+    #problemas reportados vs problemas não reportados barra vertical
+    problemas_reportados = df_fil['Impactos_na_Saúde'].apply(lambda x: 'Nenhum' not in x).value_counts().reset_index()
+    problemas_reportados.columns = ['Problemas Reportados', 'Contagem']
+    fig_problemas_reportados = px.bar(
+        problemas_reportados,
+        x='Problemas Reportados',
+        y='Contagem',
+        title='Problemas Reportados vs Problemas Não Reportados',
+        labels={'Problemas Reportados': 'Problemas Reportados', 'Contagem': 'Contagem'},
+        color='Problemas Reportados',
+        color_discrete_map={True: '#FF6347', False: '#90EE90'}  # Tomate e Verde Claro
+    )
+    col15.plotly_chart(fig_problemas_reportados, use_container_width=True)
+
+with abas[3]:
+    col16 = st.columns(1)[0]
+    col17 = st.columns(1)[0]
+    #educacional  e recrecional por dispositivo
+    fig_educacional_recreacional = px.bar(
+        df_fil,
+        x='Dispositivo',
+        y=['Educacional', 'Recreacional'],
+        title='Tempo Educacional e Recreacional por Dispositivo',
+        labels={'value': 'Tempo (horas)', 'variable': 'Tipo', 'Dispositivo': 'Dispositivo'},
+        barmode='group'
+    )  
+    col16.plotly_chart(fig_educacional_recreacional, use_container_width=True)
+
+    #educacional e recreacional por genero
+    fig_educacional_recreacional_genero = px.bar(
+        df_fil,
+        x='Gênero',
+        y=['Educacional', 'Recreacional'],
+        title='Tempo Educacional e Recreacional por Gênero',
+        labels={'value': 'Tempo (horas)', 'variable': 'Tipo', 'Gênero': 'Gênero'},
+        barmode='group'
+    )
+    col17.plotly_chart(fig_educacional_recreacional_genero, use_container_width=True)
 
 
+###
+#educacional e recreacional por genero
+
+###
+#tempo de tela médio educacional e recreacional por impactos na saúde barras e urbano ou rural
