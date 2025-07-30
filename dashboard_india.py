@@ -79,6 +79,7 @@ abas = st.tabs(['Visão Geral', 'Outra Análise','Impactos na Saúde','Recreacio
 with abas[0]:
     st.markdown('''## Visão Geral do Tempo de Tela de Crianças na Índia''')
     st.sidebar.header('Filtros')
+   
 
 
     # Filtros
@@ -99,6 +100,27 @@ with abas[0]:
         df_fil = df_fil[df_fil['Urbano ou Rural'] == localidade]
 
 
+    # Após os filtros
+    st.sidebar.write("")
+    st.sidebar.write("")
+    st.sidebar.write("")
+    st.sidebar.write("")
+    st.sidebar.write("")
+    st.sidebar.markdown(
+    """
+    <hr>
+    <div style='text-align: center; font-size:16px;'>
+        Desenvolvido por Vitor Pielak<br>
+        <a href='https://www.linkedin.com/in/vitorpielak-ti/' target='_blank' style='text-decoration: none; margin: 0 6px 0 0;'>
+            <img src='https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg' height='24px' style='vertical-align:middle;'/>
+        </a>
+        <a href='https://wa.me/551996971071' target='_blank' style='text-decoration: none; margin-left:6px;'>
+            <img src='https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg' height='24px' style='vertical-align:middle;'/>
+        </a>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 
 
@@ -160,6 +182,8 @@ with abas[0]:
 
     # tabela de dados filtrados
     st.dataframe(df_fil)
+
+
 
 with abas[1]:
     st.markdown('''## Análise Detalhada do Tempo de Tela''')
