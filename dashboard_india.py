@@ -71,8 +71,19 @@ colunas_traduzidas = {
 df = df.rename(columns=colunas_traduzidas)
 
 st.title('Dashboard de Tempo de Tela de Crianças na Índia')
-st.markdown(''' A OMS indica que crianças de 2 a 4 anos devem ter no máximo 1 hora de tela por dia, enquanto crianças de 5 a 17 anos devem ter no máximo 2 horas. Este dashboard analisa o tempo de tela de crianças na Índia e os impactos na saúde associados. :sunny: :computer: :baby: ''')
+st.markdown(
+    '''
+    A OMS indica que crianças de 2 a 4 anos devem ter no máximo 1 hora de tela por dia, enquanto crianças de 5 a 17 anos devem ter no máximo 2 horas.
+    Este dashboard analisa o tempo de tela de crianças na Índia e os impactos na saúde associados. :sunny: :computer: :baby:  
+    '''
+)
 
+st.markdown(
+    """
+    <sub><b>Dataset disponível em:</b> <a href='https://www.kaggle.com/datasets/ankushpanday2/indian-kids-screentime-2025' target='_blank'>Kaggle - Indian Kids Screen Time 2025</a></sub>
+    """,
+    unsafe_allow_html=True
+)
 
 abas = st.tabs(['Visão Geral', 'Outra Análise','Impactos na Saúde','Recreacional e Educacional'])
 #streamlit
