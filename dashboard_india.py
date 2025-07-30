@@ -162,7 +162,8 @@ with abas[0]:
     st.dataframe(df_fil)
 
 with abas[1]:
-
+    st.markdown('''## Análise Detalhada do Tempo de Tela''')
+    st.markdown('''Nesta seção, vamos explorar a relação entre idade, tempo médio de tela e gênero, além de analisar o tempo médio por dispositivo e faixa etária.''')
     
     col10 = st.columns(1)[0]
     col11,col12 = st.columns(2)
@@ -207,6 +208,9 @@ with abas[1]:
     col12.plotly_chart(fig_barras, use_container_width=True)
 
 with abas[2]:
+    
+    st.markdown('''## Análise dos Impactos na Saúde''')
+    st.markdown('''Entre os principais impactos na saúde identificados estão: Sono Ruim, Cansaço Visual, Ansiedade e Risco de Obesidade. Vamos analisar como esses impactos variam entre diferentes dispositivos e ocorrências.''')
     col13 = st.columns(1)[0]
     col14,col15 = st.columns(2)
 
@@ -252,7 +256,7 @@ with abas[2]:
     )
     col15.plotly_chart(fig_problemas_reportados, use_container_width=True)
 
-'''with abas[3]:
+with abas[3]:
     col16 = st.columns(1)[0]
     col17 = st.columns(1)[0]
     #educacional  e recrecional por dispositivo
@@ -266,20 +270,3 @@ with abas[2]:
     )  
     col16.plotly_chart(fig_educacional_recreacional, use_container_width=True)
 
-    #educacional e recreacional por genero
-    fig_educacional_recreacional_genero = px.bar(
-        df_fil,
-        x='Gênero',
-        y=['Educacional', 'Recreacional'],
-        title='Tempo Educacional e Recreacional por Gênero',
-        labels={'value': 'Tempo (horas)', 'variable': 'Tipo', 'Gênero': 'Gênero'},
-        barmode='group'
-    )
-    col17.plotly_chart(fig_educacional_recreacional_genero, use_container_width=True)
-
-
-###
-#educacional e recreacional por genero
-
-###
-#tempo de tela médio educacional e recreacional por impactos na saúde barras e urbano ou rural'''
